@@ -10,7 +10,12 @@ Class work for MoLab 2026 ITP — Jackie
 
 ## Week02
 
-- [02-Ascii-Play.playground](Week02/02-Ascii-Play.playground) — strings, arrays and ASCII art (sample code from [mobilelabclass-itp/02-Ascii-Play](https://github.com/mobilelabclass-itp/02-Ascii-Play))
+Homework, Option 1: a playground that creates an image using ascii text.
+
+![ascii image](Week02/ascii-image.png)
+
+- [02-Ascii-Play.playground](Week02/02-Ascii-Play.playground) — strings, arrays and ASCII art (sample code from [molab-itp/02-Ascii-Play](https://github.com/molab-itp/02-Ascii-Play))
+  - `ascii image` — **my homework.** Loads two ascii animals from Resources, places them side by side, draws them into a `UIImage` and saves it as a png
   - `animals ascii` — load ASCII art text files from the playground Resources bundle
   - `cows ascii` — load the cows collection from a URL
   - `cows for loops` — iterate the cows with for loops
