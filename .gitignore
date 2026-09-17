@@ -1,2 +1,6 @@
 .DS_Store
 **/xcuserdata/
+
+# local notes, not part of the class work
+CLAUDE.md
+**/CLAUDE.md
