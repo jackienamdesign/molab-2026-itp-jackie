@@ -23,3 +23,16 @@ Homework, Option 1: a playground that creates an image using ascii text.
   - `cows sorted` — sort the cows by character count
   - `cows tuple` — sort with tuples to keep track of the original order
   - `inter weave` / `inter weave func` / `inter weave 3` — interleave lines of two or three ASCII animals
+
+## Week03
+
+Homework: a multi view SwiftUI app that displays an image composed of random elements,
+using arrays and random numbers. First week as a real Xcode app project instead of a playground.
+
+<img src="Week03/tenprint-screenshot.png" width="300">
+
+- [TenPrintTiles](Week03/TenPrintTiles) — three tab SwiftUI app, runs in the simulator
+  - `ContentView` — the `TabView` that holds the three tabs (pattern from [molab-itp/03-About-Me](https://github.com/molab-itp/03-About-Me))
+  - `TenPrintView` — the 10Print algorithm drawn with `Canvas`. Builds an array of random tiles, each with a random slash direction (`Bool.random()`) and a random color (`randomElement()`). Shuffle button rebuilds the array (based on [molab-itp/03-Canvas-Explore](https://github.com/molab-itp/03-Canvas-Explore) / `CanvasAnimView`)
+  - `SymbolGridView` — same idea with random SF Symbols instead of lines (`Image(systemName:)` from [molab-itp/03-ImageUiDemo-1-symbols](https://github.com/molab-itp/03-ImageUiDemo-1-symbols))
+  - `AboutView` — plain text describing what the other two tabs do
