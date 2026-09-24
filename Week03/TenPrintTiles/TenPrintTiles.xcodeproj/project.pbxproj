@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		ABEE3A3C2D4651DE007E8632 /* TenPrintTiles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TenPrintTiles.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABEE3A3C2D4651DE007E8632 /* TenPrintTiles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TenPrintTiles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABEE3A562D465226007E8632 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		ABEE3A3E2D4651DE007E8632 /* TenPrintTiles */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "TenPrintTiles";
+			path = TenPrintTiles;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -65,10 +65,10 @@
 			fileSystemSynchronizedGroups = (
 				ABEE3A3E2D4651DE007E8632 /* TenPrintTiles */,
 			);
-			name = "TenPrintTiles";
+			name = TenPrintTiles;
 			packageProductDependencies = (
 			);
-			productName = "TenPrintTiles";
+			productName = TenPrintTiles;
 			productReference = ABEE3A3C2D4651DE007E8632 /* TenPrintTiles.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -267,7 +267,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "design.jackienam.TenPrintTiles";
+				PRODUCT_BUNDLE_IDENTIFIER = design.jackienam.TenPrintTiles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -296,7 +296,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "design.jackienam.TenPrintTiles";
+				PRODUCT_BUNDLE_IDENTIFIER = design.jackienam.TenPrintTiles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

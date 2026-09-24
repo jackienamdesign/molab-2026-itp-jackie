@@ -31,8 +31,9 @@ using arrays and random numbers. First week as a real Xcode app project instead 
 
 <img src="Week03/tenprint-screenshot.png" width="300">
 
-- [TenPrintTiles](Week03/TenPrintTiles) — three tab SwiftUI app, runs in the simulator
-  - `ContentView` — the `TabView` that holds the three tabs (pattern from [molab-itp/03-About-Me](https://github.com/molab-itp/03-About-Me))
+- [TenPrintTiles](Week03/TenPrintTiles) — four tab SwiftUI app, runs in the simulator
+  - `ContentView` — the `TabView` that holds the four tabs (pattern from [molab-itp/03-About-Me](https://github.com/molab-itp/03-About-Me))
   - `TenPrintView` — the 10Print algorithm drawn with `Canvas`. Builds an array of random tiles, each with a random slash direction (`Bool.random()`) and a random color (`randomElement()`). Shuffle button rebuilds the array (based on [molab-itp/03-Canvas-Explore](https://github.com/molab-itp/03-Canvas-Explore) / `CanvasAnimView`)
   - `SymbolGridView` — same idea with random SF Symbols instead of lines (`Image(systemName:)` from [molab-itp/03-ImageUiDemo-1-symbols](https://github.com/molab-itp/03-ImageUiDemo-1-symbols))
-  - `AboutView` — plain text describing what the other two tabs do
+  - `EmojiGridView` — **my own take.** A copy of `SymbolGridView` filled with my most used emojis, shuffled randomly. Emoji are text rather than symbols, so this one uses `Text(...)` instead of `Image(systemName:)`
+  - `AboutView` — plain text describing what the other tabs do

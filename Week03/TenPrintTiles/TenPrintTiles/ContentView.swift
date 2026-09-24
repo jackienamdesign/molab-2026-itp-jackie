@@ -24,6 +24,11 @@ struct ContentView: View {
           Label("Symbols", systemImage: "square.grid.3x3")
         }
 
+      EmojiGridView()
+        .tabItem {
+          Label("Emojis", systemImage: "face.smiling")
+        }
+
       AboutView()
         .tabItem {
           Label("About", systemImage: "info.circle")

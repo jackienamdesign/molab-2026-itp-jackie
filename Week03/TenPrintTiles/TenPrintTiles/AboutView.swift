@@ -19,7 +19,9 @@ struct AboutView: View {
 
       Text("Symbol Grid does the same thing with SF Symbols instead of lines.")
 
-      Text("Both screens build an array first, then draw the array. Tap Shuffle to make a new one.")
+      Text("My Emojis is a copy of Symbol Grid filled with my most used emojis. Emoji are text, not symbols, so that screen uses Text() instead of Image(systemName:).")
+
+      Text("Every screen builds an array first, then draws the array. Tap Shuffle to make a new one.")
 
       Spacer()
     }
