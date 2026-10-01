@@ -57,7 +57,3 @@ Homework: a SwiftUI app that incorporates time and/or audio playback, with at le
   - `AboutView` — what the app is
   - Uses `@State` only — no shared model, no structs of my own, no grid math, so I can
     explain every line
-- [MinuteGardenPlus](Week04/MinuteGardenPlus) — first attempt at the same idea, kept for
-  reference. Adds an `@Observable GardenDJ` shared across pages with `.environment()`, a
-  `Track` struct, selectable ambience, a `ProgressView` driven by `TimelineView(.animation)`,
-  and a garden laid out as a grid
