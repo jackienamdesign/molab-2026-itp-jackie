@@ -37,3 +37,27 @@ using arrays and random numbers. First week as a real Xcode app project instead 
   - `SymbolGridView` — same idea with random SF Symbols instead of lines (`Image(systemName:)` from [molab-itp/03-ImageUiDemo-1-symbols](https://github.com/molab-itp/03-ImageUiDemo-1-symbols))
   - `EmojiGridView` — **my own take.** A copy of `SymbolGridView` filled with my most used emojis, shuffled randomly. Emoji are text rather than symbols, so this one uses `Text(...)` instead of `Image(systemName:)`
   - `AboutView` — plain text describing what the other tabs do
+
+## Week04
+
+Homework: a SwiftUI app that incorporates time and/or audio playback, with at least two pages.
+
+<img src="Week04/timer-screenshot.png" width="260"> <img src="Week04/sounds-screenshot.png" width="260">
+
+- [MinuteGarden](Week04/MinuteGarden) — **my homework.** A one minute timer. Press Start
+  and a plant is added every 10 seconds while birds play underneath; a chime rings at zero
+  - `Audio.swift` — the sound file names, the plant emoji, and `loadBundleAudio`, copied
+    from [molab-itp/04-Audio-State-Demo](https://github.com/molab-itp/04-Audio-State-Demo) / `PlayAudioView`
+  - `ContentView` — the `TabView` holding the three pages (same pattern as Week03)
+  - `TimerView` — `Timer.publish(every: 1)` counts down from 60 in `.onReceive`. Every
+    10th second adds a random plant to a string of emoji; zero stops the birds and plays
+    the chime (countdown from `CountDownTimerView`)
+  - `SoundsView` — Play / Stop / Next through the three sounds, essentially
+    `PlayAudioView` with the names changed
+  - `AboutView` — what the app is
+  - Uses `@State` only — no shared model, no structs of my own, no grid math, so I can
+    explain every line
+- [MinuteGardenPlus](Week04/MinuteGardenPlus) — first attempt at the same idea, kept for
+  reference. Adds an `@Observable GardenDJ` shared across pages with `.environment()`, a
+  `Track` struct, selectable ambience, a `ProgressView` driven by `TimelineView(.animation)`,
+  and a garden laid out as a grid
