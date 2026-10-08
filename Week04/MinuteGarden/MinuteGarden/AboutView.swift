@@ -22,12 +22,6 @@ struct AboutView: View {
                 .multilineTextAlignment(.center)
                 .padding()
 
-            Spacer()
-
-            Text("Jackie Nam, ITP Mobile Lab 2026")
-            Text("Sounds from the class sample 04-Audio-State-Demo")
-                .multilineTextAlignment(.center)
-                .padding()
         }
         .padding()
     }

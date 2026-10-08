@@ -18,8 +18,8 @@ struct SoundsView: View {
                 .font(.largeTitle)
                 .padding()
 
-            Text("soundIndex \(soundIndex)")
-            Text("soundFile \(soundFile)")
+            Text("Sound \(soundIndex) / 3")
+            Text("Sound File Name: \(soundFile)")
                 .padding()
 
             Spacer()
