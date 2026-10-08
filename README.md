@@ -57,3 +57,29 @@ Homework: a SwiftUI app that incorporates time and/or audio playback, with at le
   - `AboutView` — what the app is
   - Uses `@State` only — no shared model, no structs of my own, no grid math, so I can
     explain every line
+
+## Week05
+
+Homework: incorporate one of the class demos into the navigation app.
+
+`[screenshots - need to run it on my phone]`
+
+- [TurnBack](Week05/TurnBack) — **my homework.** A navigation app that runs on the
+  gyroscope. Press Mark while facing the way you came in, and the arrow keeps pointing
+  back that way however you turn
+  - `BrowseView` — the list of pages, and where the sensor is started and stopped
+    (from [molab-itp/05-Seismometer](https://github.com/molab-itp/05-Seismometer) / `SeismometerBrowser`)
+  - `HeadingView` — **my own take.** `detector.yaw` says how far the phone has spun
+    since the sensor started; subtract the marked yaw and turn the arrow by the
+    difference with `.rotationEffect` (the needle trick from `NeedleSeismometer`).
+    Four emoji buttons 📍 🏠 🚗 🥾 pick what the marked spot is called, and
+    `@AppStorage` remembers the pick between launches, from
+    [molab-itp/05-AppStorageDemo](https://github.com/molab-itp/05-AppStorageDemo)
+  - `LevelView` / `BubbleLevel` / `OrientationDataView` / `MotionDetector` — from
+    [molab-itp/05-BubbleLevel](https://github.com/molab-itp/05-BubbleLevel), copied
+    almost unchanged. The level earns its place: yaw only reads true with the phone flat
+  - `AboutView` — what it does, and why it is not a compass
+  - **It is not a compass.** The gyroscope knows how far the phone has turned, not
+    where north is — that needs the magnetometer. So the direction has to be marked
+    again every launch, which is why the marked yaw is the one thing *not* saved
+  - **Device required.** Nothing moves in the simulator
