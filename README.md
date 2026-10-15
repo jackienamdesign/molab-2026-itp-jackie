@@ -83,3 +83,28 @@ Homework: incorporate one of the class demos into the navigation app.
     where north is — that needs the magnetometer. So the direction has to be marked
     again every launch, which is why the marked yaw is the one thing *not* saved
   - **Device required.** Nothing moves in the simulator
+
+## Week06
+
+Homework: add one of the class options for saving data to your app.
+
+`[screenshots - Way Back and My Walks after a few real walks]`
+
+- [TurnBack](Week06/TurnBack) — Week05's TurnBack plus **My Walks**, a drift log that is saved
+  as JSON in the app's Documents folder (pattern from
+  [molab-itp/06-ImageEditDemoJSON](https://github.com/molab-itp/06-ImageEditDemoJSON))
+  - Last week the marked heading couldn't be saved because the sensor resets every
+    launch. **What's worth saving is how wrong it gets.** Mark a direction, walk a
+    loop, come back, face the way you marked and tap **I'm back**. The arrow's
+    reading then is the drift
+  - `DriftEntry` — **new.** One walk: emoji, place, date, minutes gone, degrees off.
+    A `Codable` struct like the sample's `ItemModel`
+  - `Model` / `Document` / `SaveLoadJSON` — the sample's save and load, trimmed down.
+    The log saves after every change and loads on launch
+  - `LogView` — **new page, My Walks.** The average drift up top, then every saved walk,
+    newest first. Clearing takes two taps
+  - `HeadingView` — **renamed Way Back** and redesigned. The screen shows one step at a
+    time, buttons are big and full width at the bottom (44 pt minimum), and turns are
+    described in words ("12° to your right")
+  - Saving can be tested in the simulator (stop and rerun, and the entries are still
+    there). Real drift numbers need the phone
