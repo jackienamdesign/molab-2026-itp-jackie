@@ -88,7 +88,9 @@ Homework: incorporate one of the class demos into the navigation app.
 
 Homework: add one of the class options for saving data to your app.
 
-`[screenshots - Way Back and My Walks after a few real walks]`
+<img src="Week06/mywalks-screenshot.png" width="300">
+
+First real walk on my iPhone: 3° off.
 
 - [TurnBack](Week06/TurnBack) — Week05's TurnBack plus **My Walks**, a drift log that is saved
   as JSON in the app's Documents folder (pattern from
