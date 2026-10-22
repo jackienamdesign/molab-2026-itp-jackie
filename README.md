@@ -3,10 +3,10 @@
 Class work for MoLab 2026 ITP — Jackie
 
 - Midterm checklist
-  - [ ] weekly description of homework progress/challenges in your wiki page
+  - [x] weekly description of homework progress/challenges in your wiki page
   - [x] added jht9629-nyu as collab on your repo
-  - [ ] uploaded at least one photo in MoGallery TestFlight App
-  - [ ] able to build and run example apps own iPhone
+  - [x] uploaded at least one photo in MoGallery TestFlight App
+  - [x] able to build and run example apps own iPhone
   - [ ] installed Xcode 27
   - [ ] watched at least one WWDC video
 
