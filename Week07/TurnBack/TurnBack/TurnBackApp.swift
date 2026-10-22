@@ -20,7 +20,7 @@ struct TurnBackApp: App {
 
   var body: some Scene {
     WindowGroup {
-      BrowseView()
+      ContentView()
         .environment(detector)
         .environment(document)
     }
