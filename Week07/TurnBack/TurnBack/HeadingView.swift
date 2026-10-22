@@ -13,17 +13,21 @@
 //  I'm back. Whatever the arrow reads then is how far the gyroscope drifted,
 //  and that gets saved to My Walks.
 //
-//  Week06 UX pass: the screen shows only what matters for the step you are on.
-//  Before marking: pick the place, then one big Mark button. While walking: the
-//  arrow, which way to turn in words, and one big I'm back button. Every button
-//  is at least 44 points tall, Apple's minimum touch target.
-//
 //  Week07: before marking, add a photo of the view you are facing. "Face the
 //  way you marked" was the weak spot in Week06 - by the time I got back I only
 //  roughly remembered which way that was. Now the photo is on screen while
-//  walking, so I can line up with it before saving, and it is kept with the
-//  walk in My Walks. PhotosPicker and loadImage are from the class sample
-//  07-Instafilter; the in-app camera is CameraPicker.swift.
+//  walking, so I can line up with it before saving. PhotosPicker and loadImage
+//  are from the class sample 07-Instafilter; the in-app camera is
+//  CameraPicker.swift.
+//
+//  Week07 UX pass: the page is two screens in one, picked by isMarked.
+//  - markingView: three numbered steps, Photo -> Place -> Mark, in the order
+//    you do them. The photo gets the big space at the top - the arrow means
+//    nothing until something is marked, so it no longer sits there grey.
+//  - walkingView: the arrow is the biggest thing. The photo sits above the
+//    I'm back button, and tapping it opens it full screen to line up with.
+//  Both show a warning when the phone isn't flat, which used to be hidden on
+//  the Level page. Tapping the warning opens Level in a sheet.
 //
 
 import PhotosUI
@@ -50,14 +54,16 @@ struct HeadingView: View {
   @State var showingCamera = false
   let cameraAvailable = UIImagePickerController.isSourceTypeAvailable(.camera)
 
-  // @AppStorage remembers which place is picked between launches - new this
-  // week, from the class sample 05-AppStorageDemo.
+  // Week07 UX: the photo full screen, and the Level page in a sheet.
+  @State var showingPhoto = false
+  @State var showingLevel = false
+
+  // @AppStorage remembers which place is picked between launches - from the
+  // class sample 05-AppStorageDemo.
   @AppStorage("nameIndex") var nameIndex = 0
 
   // The three arrays line up: emojis[i] and labels[i] are the button for
   // names[i]. labels are short for under the emoji; names read in a sentence.
-  // Emoji are text, not symbols, so they go in a Text - same as Week03 /
-  // EmojiGridView.
   let emojis = ["📍", "🏠", "🚗", "🥾"]
   let labels = ["Start", "Home", "Car", "Trail"]
   let names = ["the start", "home", "the car", "the trailhead"]
@@ -94,167 +100,19 @@ struct HeadingView: View {
     return String(degrees) + "\u{00B0} to your left"
   }
 
+  // Week07 UX: same flat-enough test as LevelView - less than 10 degrees of
+  // tilt either way.
+  var isFlat: Bool {
+    let worst = max(abs(detector.roll), abs(detector.pitch))
+    return worst * 180 / Double.pi < 10
+  }
+
   var body: some View {
-    VStack {
-      Text(isMarked ? "Follow the arrow back to " + markName : "Face the way you came from")
-        .font(.title2)
-        .fontWeight(.semibold)
-        .multilineTextAlignment(.center)
-        .padding(.horizontal)
-        .padding(.top)
-
-      Spacer()
-
-      // Grey until something is marked, so it doesn't look like it's pointing
-      // somewhere it isn't.
-      Image(systemName: "location.north.fill")
-        .resizable()
-        .scaledToFit()
-        .frame(width: 140, height: 140)
-        .foregroundStyle(isMarked ? Color.accentColor : Color.gray.opacity(0.4))
-        .rotationEffect(Angle(radians: turnAngle))
-        .padding(32)
-
-      Text(isMarked ? turnText : "Not marked yet")
-        .font(.title)
-        .fontWeight(.semibold)
-
-      Text(savedMessage)
-        .font(.callout)
-        .foregroundStyle(Color.accentColor)
-        .padding(.top, 8)
-
-      Spacer()
-
+    VStack(spacing: 0) {
       if isMarked {
-        // Week07: the photo goes right above the save button - it is what to
-        // line up with before tapping it.
-        if let pickedImage {
-          Image(uiImage: pickedImage)
-            .resizable()
-            .scaledToFit()
-            .frame(maxHeight: 120)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding(.horizontal)
-        }
-
-        Text(
-          pickedImage == nil
-            ? "Back where you started? Face the way you marked, then save."
-            : "Back where you started? Line up with your photo, then save."
-        )
-          .font(.callout)
-          .foregroundStyle(Color.secondary)
-          .multilineTextAlignment(.center)
-          .padding(.horizontal)
-
-        Button(action: { saveDrift() }) {
-          Text("I'm back - save walk")
-            .font(.headline)
-            .foregroundStyle(Color.white)
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .background(
-              RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(Color.accentColor))
-        }
-        .padding(.horizontal)
-
-        // Kept small and well below the main button so it is hard to hit by
-        // accident - it throws the walk away. contentShape makes the whole
-        // 44 point strip tappable, not just the letters.
-        Button(action: { cancelMark() }) {
-          Text("Start over")
-            .foregroundStyle(Color.secondary)
-            .frame(maxWidth: .infinity, minHeight: 44)
-            .contentShape(Rectangle())
-        }
-        .padding(.top, 12)
-        .padding(.bottom)
+        walkingView
       } else {
-        // Week07: a photo of the view, before marking. Take photo opens the
-        // camera in the app; Choose opens the library with PhotosPicker.
-        // matching: .images leaves videos out of the list.
-        HStack(spacing: 10) {
-          if let pickedImage {
-            Image(uiImage: pickedImage)
-              .resizable()
-              .scaledToFill()
-              .frame(width: 56, height: 56)
-              .clipShape(RoundedRectangle(cornerRadius: 12))
-          }
-
-          if cameraAvailable {
-            Button(action: { showingCamera = true }) {
-              HStack(spacing: 8) {
-                Image(systemName: "camera")
-                Text(pickedImage == nil ? "Take photo" : "Retake")
-              }
-              .font(.headline)
-              .frame(maxWidth: .infinity, minHeight: 56)
-              .background(
-                RoundedRectangle(cornerRadius: 16)
-                  .foregroundStyle(Color.gray.opacity(0.1)))
-            }
-          }
-
-          PhotosPicker(selection: $selectedItem, matching: .images) {
-            HStack(spacing: 8) {
-              Image(systemName: "photo.on.rectangle")
-              Text(cameraAvailable ? "Choose" : "Add a photo of this view")
-            }
-            .font(.headline)
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .background(
-              RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(Color.gray.opacity(0.1)))
-          }
-          .onChange(of: selectedItem, loadImage)
-        }
-        .padding(.horizontal)
-        .padding(.bottom, 12)
-
-        Text("This spot is")
-          .font(.callout)
-          .foregroundStyle(Color.secondary)
-
-        // One button per place. Each is a full tile with a word under the
-        // emoji, so it is easy to hit and clear what it means.
-        HStack(spacing: 10) {
-          ForEach(0..<emojis.count, id: \.self) { i in
-            Button(action: { nameIndex = i }) {
-              VStack(spacing: 4) {
-                Text(emojis[i])
-                  .font(.system(size: 32))
-                  .opacity(nameIndex == i ? 1.0 : 0.5)
-                Text(labels[i])
-                  .font(.caption)
-                  .fontWeight(nameIndex == i ? .semibold : .regular)
-                  .foregroundStyle(nameIndex == i ? Color.primary : Color.secondary)
-              }
-              .frame(maxWidth: .infinity, minHeight: 72)
-              .background(
-                RoundedRectangle(cornerRadius: 16)
-                  .foregroundStyle(
-                    nameIndex == i
-                      ? Color.accentColor.opacity(0.18) : Color.gray.opacity(0.1))
-              )
-            }
-          }
-        }
-        .padding(.horizontal)
-        .padding(.bottom, 12)
-
-        Button(action: { mark() }) {
-          Text("Mark this direction")
-            .font(.headline)
-            .foregroundStyle(Color.white)
-            .frame(maxWidth: .infinity, minHeight: 56)
-            .background(
-              RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(Color.accentColor))
-        }
-        .padding(.horizontal)
-        .padding(.bottom)
+        markingView
       }
     }
     .navigationTitle("Way Back")
@@ -263,7 +121,294 @@ struct HeadingView: View {
       CameraPicker(image: $pickedImage, isPresented: $showingCamera)
         .ignoresSafeArea()
     }
+    .fullScreenCover(isPresented: $showingPhoto) {
+      photoFullScreen
+    }
+    .sheet(isPresented: $showingLevel) {
+      NavigationStack {
+        LevelView()
+      }
+    }
   }
+
+  // MARK: before marking - three steps
+
+  var markingView: some View {
+    VStack(alignment: .leading, spacing: 10) {
+      // After a save, the result shows here until the next Mark.
+      if savedMessage != "" {
+        HStack(spacing: 8) {
+          Image(systemName: "checkmark.circle.fill")
+          Text(savedMessage)
+        }
+        .font(.headline)
+        .foregroundStyle(Color.accentColor)
+        .frame(maxWidth: .infinity, minHeight: 44)
+        .background(
+          RoundedRectangle(cornerRadius: 16)
+            .foregroundStyle(Color.accentColor.opacity(0.15)))
+      }
+
+      Text("1  PHOTO OF THE WAY YOU CAME FROM")
+        .font(.caption)
+        .fontWeight(.semibold)
+        .foregroundStyle(Color.secondary)
+
+      // The photo, or an empty frame saying what goes there.
+      // scaledToFill + clipShape fills the frame without stretching.
+      ZStack {
+        RoundedRectangle(cornerRadius: 16)
+          .foregroundStyle(Color.gray.opacity(0.1))
+        if let pickedImage {
+          Image(uiImage: pickedImage)
+            .resizable()
+            .scaledToFill()
+        } else {
+          VStack(spacing: 6) {
+            Image(systemName: "photo")
+              .font(.system(size: 36))
+            Text("Optional - it helps you line up when you get back")
+              .font(.caption)
+              .multilineTextAlignment(.center)
+          }
+          .foregroundStyle(Color.secondary)
+          .padding()
+        }
+      }
+      .frame(maxWidth: .infinity)
+      .frame(height: 180)
+      .clipShape(RoundedRectangle(cornerRadius: 16))
+
+      HStack(spacing: 10) {
+        if cameraAvailable {
+          Button(action: { showingCamera = true }) {
+            HStack(spacing: 6) {
+              Image(systemName: "camera")
+              Text(pickedImage == nil ? "Take photo" : "Retake")
+            }
+            .font(.subheadline)
+            .fontWeight(.semibold)
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .background(
+              RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(Color.gray.opacity(0.1)))
+          }
+        }
+
+        // matching: .images leaves videos out of the list.
+        PhotosPicker(selection: $selectedItem, matching: .images) {
+          HStack(spacing: 6) {
+            Image(systemName: "photo.on.rectangle")
+            Text(cameraAvailable ? "Choose" : "Choose a photo")
+          }
+          .font(.subheadline)
+          .fontWeight(.semibold)
+          .frame(maxWidth: .infinity, minHeight: 44)
+          .background(
+            RoundedRectangle(cornerRadius: 16)
+              .foregroundStyle(Color.gray.opacity(0.1)))
+        }
+        .onChange(of: selectedItem, loadImage)
+      }
+
+      Spacer()
+
+      Text("2  THIS SPOT IS")
+        .font(.caption)
+        .fontWeight(.semibold)
+        .foregroundStyle(Color.secondary)
+
+      // One button per place. Each is a full tile with a word under the
+      // emoji, so it is easy to hit and clear what it means.
+      HStack(spacing: 10) {
+        ForEach(0..<emojis.count, id: \.self) { i in
+          Button(action: { nameIndex = i }) {
+            VStack(spacing: 4) {
+              Text(emojis[i])
+                .font(.system(size: 32))
+                .opacity(nameIndex == i ? 1.0 : 0.5)
+              Text(labels[i])
+                .font(.caption)
+                .fontWeight(nameIndex == i ? .semibold : .regular)
+                .foregroundStyle(nameIndex == i ? Color.primary : Color.secondary)
+            }
+            .frame(maxWidth: .infinity, minHeight: 72)
+            .background(
+              RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(
+                  nameIndex == i
+                    ? Color.accentColor.opacity(0.18) : Color.gray.opacity(0.1))
+            )
+          }
+        }
+      }
+
+      Spacer()
+
+      Text("3  FACE THAT WAY AND MARK")
+        .font(.caption)
+        .fontWeight(.semibold)
+        .foregroundStyle(Color.secondary)
+
+      if !isFlat {
+        tiltWarning
+      }
+
+      Button(action: { mark() }) {
+        Text("Mark this direction")
+          .font(.headline)
+          .foregroundStyle(Color.white)
+          .frame(maxWidth: .infinity, minHeight: 56)
+          .background(
+            RoundedRectangle(cornerRadius: 16)
+              .foregroundStyle(Color.accentColor))
+      }
+    }
+    .padding()
+  }
+
+  // MARK: while walking - the arrow first
+
+  var walkingView: some View {
+    VStack(spacing: 10) {
+      Text("Follow the arrow back to " + markName)
+        .font(.title3)
+        .fontWeight(.semibold)
+        .multilineTextAlignment(.center)
+
+      Spacer()
+
+      Image(systemName: "location.north.fill")
+        .resizable()
+        .scaledToFit()
+        .frame(width: 140, height: 140)
+        .foregroundStyle(Color.accentColor)
+        .rotationEffect(Angle(radians: turnAngle))
+        .padding(24)
+
+      Text(turnText)
+        .font(.title)
+        .fontWeight(.semibold)
+
+      if !isFlat {
+        tiltWarning
+      }
+
+      Spacer()
+
+      // The photo is the thing to line up with, so it sits right above the
+      // save button. .buttonStyle(.plain) keeps the photo its own colors -
+      // same as the PhotosPicker in 07-Instafilter.
+      if let pickedImage {
+        Button(action: { showingPhoto = true }) {
+          HStack(spacing: 12) {
+            Image(uiImage: pickedImage)
+              .resizable()
+              .scaledToFill()
+              .frame(width: 64, height: 64)
+              .clipShape(RoundedRectangle(cornerRadius: 12))
+            VStack(alignment: .leading, spacing: 2) {
+              Text("Back at the spot?")
+                .font(.headline)
+              Text("Tap to line up with your photo")
+                .font(.caption)
+                .foregroundStyle(Color.secondary)
+            }
+            Spacer()
+            Image(systemName: "arrow.up.left.and.arrow.down.right")
+              .foregroundStyle(Color.secondary)
+          }
+          .padding(10)
+          .background(
+            RoundedRectangle(cornerRadius: 16)
+              .foregroundStyle(Color.gray.opacity(0.1)))
+        }
+        .buttonStyle(.plain)
+      } else {
+        Text("Back where you started? Face the way you marked, then save.")
+          .font(.callout)
+          .foregroundStyle(Color.secondary)
+          .multilineTextAlignment(.center)
+      }
+
+      Button(action: { saveDrift() }) {
+        Text("I'm back - save walk")
+          .font(.headline)
+          .foregroundStyle(Color.white)
+          .frame(maxWidth: .infinity, minHeight: 56)
+          .background(
+            RoundedRectangle(cornerRadius: 16)
+              .foregroundStyle(Color.accentColor))
+      }
+
+      // Kept small and away from the main button - it throws the walk away.
+      // contentShape makes the whole 44 point strip tappable, not just the
+      // letters.
+      Button(action: { cancelMark() }) {
+        Text("Start over")
+          .foregroundStyle(Color.secondary)
+          .frame(maxWidth: .infinity, minHeight: 44)
+          .contentShape(Rectangle())
+      }
+      .padding(.top, 6)
+    }
+    .padding()
+  }
+
+  // MARK: pieces used by both
+
+  // Shown only while the phone is tilted. Tap it to open the Level.
+  var tiltWarning: some View {
+    Button(action: { showingLevel = true }) {
+      HStack(spacing: 8) {
+        Image(systemName: "exclamationmark.triangle.fill")
+        Text("Hold the phone flat")
+          .fontWeight(.semibold)
+        Spacer()
+        Text("Level")
+        Image(systemName: "chevron.right")
+      }
+      .font(.subheadline)
+      .foregroundStyle(Color.orange)
+      .padding(.horizontal, 12)
+      .frame(maxWidth: .infinity, minHeight: 44)
+      .background(
+        RoundedRectangle(cornerRadius: 16)
+          .foregroundStyle(Color.orange.opacity(0.15)))
+    }
+  }
+
+  // The marked photo filling the screen, to hold up and match the view.
+  var photoFullScreen: some View {
+    ZStack {
+      Color.black
+        .ignoresSafeArea()
+      if let pickedImage {
+        Image(uiImage: pickedImage)
+          .resizable()
+          .scaledToFit()
+      }
+      VStack {
+        Text("Turn until the view matches this photo")
+          .font(.headline)
+          .foregroundStyle(Color.white)
+          .padding(.top)
+        Spacer()
+        Button(action: { showingPhoto = false }) {
+          Text("Done")
+            .font(.headline)
+            .foregroundStyle(Color.white)
+            .frame(maxWidth: .infinity, minHeight: 56)
+            .background(
+              RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(Color.accentColor))
+        }
+        .padding()
+      }
+    }
+  }
+
+  // MARK: actions
 
   func mark() {
     markedYaw = detector.yaw
