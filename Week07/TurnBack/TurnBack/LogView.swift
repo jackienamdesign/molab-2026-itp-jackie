@@ -86,7 +86,7 @@ struct LogView: View {
                   .resizable()
                   .scaledToFill()
                   .frame(width: 56, height: 56)
-                  .clipShape(RoundedRectangle(cornerRadius: 10))
+                  .clipShape(RoundedRectangle(cornerRadius: 12))
               } else {
                 Text(entry.emoji)
                   .font(.system(size: 34))

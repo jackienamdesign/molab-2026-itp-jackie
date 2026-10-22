@@ -180,7 +180,7 @@ struct HeadingView: View {
               .resizable()
               .scaledToFill()
               .frame(width: 56, height: 56)
-              .clipShape(RoundedRectangle(cornerRadius: 10))
+              .clipShape(RoundedRectangle(cornerRadius: 12))
           }
 
           if cameraAvailable {
@@ -192,7 +192,7 @@ struct HeadingView: View {
               .font(.headline)
               .frame(maxWidth: .infinity, minHeight: 56)
               .background(
-                RoundedRectangle(cornerRadius: 14)
+                RoundedRectangle(cornerRadius: 16)
                   .foregroundStyle(Color.gray.opacity(0.1)))
             }
           }
@@ -205,7 +205,7 @@ struct HeadingView: View {
             .font(.headline)
             .frame(maxWidth: .infinity, minHeight: 56)
             .background(
-              RoundedRectangle(cornerRadius: 14)
+              RoundedRectangle(cornerRadius: 16)
                 .foregroundStyle(Color.gray.opacity(0.1)))
           }
           .onChange(of: selectedItem, loadImage)
@@ -233,7 +233,7 @@ struct HeadingView: View {
               }
               .frame(maxWidth: .infinity, minHeight: 72)
               .background(
-                RoundedRectangle(cornerRadius: 14)
+                RoundedRectangle(cornerRadius: 16)
                   .foregroundStyle(
                     nameIndex == i
                       ? Color.accentColor.opacity(0.18) : Color.gray.opacity(0.1))
