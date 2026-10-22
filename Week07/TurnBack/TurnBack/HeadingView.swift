@@ -23,7 +23,7 @@
 //  roughly remembered which way that was. Now the photo is on screen while
 //  walking, so I can line up with it before saving, and it is kept with the
 //  walk in My Walks. PhotosPicker and loadImage are from the class sample
-//  07-Instafilter.
+//  07-Instafilter; the in-app camera is CameraPicker.swift.
 //
 
 import PhotosUI
@@ -43,6 +43,12 @@ struct HeadingView: View {
   // Same pair as processedImage / selectedItem in 07-Instafilter.
   @State var selectedItem: PhotosPickerItem?
   @State var pickedImage: UIImage?
+
+  // Week07: the in-app camera, CameraPicker.swift. Shown with
+  // .fullScreenCover - the sample's .sheet, but filling the screen, which
+  // suits a camera better. No camera in the simulator, so the button hides.
+  @State var showingCamera = false
+  let cameraAvailable = UIImagePickerController.isSourceTypeAvailable(.camera)
 
   // @AppStorage remembers which place is picked between launches - new this
   // week, from the class sample 05-AppStorageDemo.
@@ -165,31 +171,45 @@ struct HeadingView: View {
         .padding(.top, 12)
         .padding(.bottom)
       } else {
-        // Week07: PhotosPicker opens the photo library. It can't take a new
-        // photo, so take one with the Camera app first, then pick it here.
+        // Week07: a photo of the view, before marking. Take photo opens the
+        // camera in the app; Choose opens the library with PhotosPicker.
         // matching: .images leaves videos out of the list.
-        PhotosPicker(selection: $selectedItem, matching: .images) {
-          HStack(spacing: 12) {
-            if let pickedImage {
-              Image(uiImage: pickedImage)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 44, height: 44)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-              Text("Change photo")
-            } else {
-              Image(systemName: "photo.badge.plus")
-                .font(.title2)
-              Text("Add a photo of this view")
+        HStack(spacing: 10) {
+          if let pickedImage {
+            Image(uiImage: pickedImage)
+              .resizable()
+              .scaledToFill()
+              .frame(width: 56, height: 56)
+              .clipShape(RoundedRectangle(cornerRadius: 10))
+          }
+
+          if cameraAvailable {
+            Button(action: { showingCamera = true }) {
+              HStack(spacing: 8) {
+                Image(systemName: "camera")
+                Text(pickedImage == nil ? "Take photo" : "Retake")
+              }
+              .font(.headline)
+              .frame(maxWidth: .infinity, minHeight: 56)
+              .background(
+                RoundedRectangle(cornerRadius: 14)
+                  .foregroundStyle(Color.gray.opacity(0.1)))
             }
           }
-          .font(.headline)
-          .frame(maxWidth: .infinity, minHeight: 56)
-          .background(
-            RoundedRectangle(cornerRadius: 14)
-              .foregroundStyle(Color.gray.opacity(0.1)))
+
+          PhotosPicker(selection: $selectedItem, matching: .images) {
+            HStack(spacing: 8) {
+              Image(systemName: "photo.on.rectangle")
+              Text(cameraAvailable ? "Choose" : "Add a photo of this view")
+            }
+            .font(.headline)
+            .frame(maxWidth: .infinity, minHeight: 56)
+            .background(
+              RoundedRectangle(cornerRadius: 14)
+                .foregroundStyle(Color.gray.opacity(0.1)))
+          }
+          .onChange(of: selectedItem, loadImage)
         }
-        .onChange(of: selectedItem, loadImage)
         .padding(.horizontal)
         .padding(.bottom, 12)
 
@@ -239,6 +259,10 @@ struct HeadingView: View {
     }
     .navigationTitle("Way Back")
     .navigationBarTitleDisplayMode(.inline)
+    .fullScreenCover(isPresented: $showingCamera) {
+      CameraPicker(image: $pickedImage, isPresented: $showingCamera)
+        .ignoresSafeArea()
+    }
   }
 
   func mark() {

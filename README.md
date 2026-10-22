@@ -139,5 +139,8 @@ Homework: an app that accesses or manipulates photos.
     `driftlog.json`, using `documentPath` from `SaveLoadJSON.swift` and the Week02
     `Data(contentsOf:)` + `UIImage(data:)` pair. Clear all deletes the photo files too
   - `LogView` — My Walks shows each walk's photo in place of its emoji
-  - `PhotosPicker` can't take a new photo — take it with the Camera app first, then pick it.
-    The simulator has sample photos, so picking and saving can be tested there
+  - `CameraPicker` — **Take photo** opens the camera inside the app. Same shape as
+    `PhotoPicker.swift` in [molab-itp/07-PhotoPickBlender](https://github.com/molab-itp/07-PhotoPickBlender)
+    (`UIViewControllerRepresentable` + a `Coordinator`), with `UIImagePickerController` and
+    `.camera` instead of the library picker. **Choose** still picks from the library
+  - The simulator has no camera, so only Choose shows there. Take photo needs the phone
