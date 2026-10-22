@@ -138,9 +138,15 @@ Homework: an app that accesses or manipulates photos.
   - `Document` — `savePhoto` / `loadPhoto` write and read a jpg in Documents next to
     `driftlog.json`, using `documentPath` from `SaveLoadJSON.swift` and the Week02
     `Data(contentsOf:)` + `UIImage(data:)` pair. Clear all deletes the photo files too
-  - `LogView` — My Walks shows each walk's photo in place of its emoji
+  - `LogView` — My Walks shows each walk's photo in place of its emoji, and compares
+    the average drift **with a photo vs without**
+  - `WalkDetailView` — **new.** Tap a walk: the big photo, which way the arrow was off,
+    and delete (two taps)
   - `CameraPicker` — **Take photo** opens the camera inside the app. Same shape as
     `PhotoPicker.swift` in [molab-itp/07-PhotoPickBlender](https://github.com/molab-itp/07-PhotoPickBlender)
     (`UIViewControllerRepresentable` + a `Coordinator`), with `UIImagePickerController` and
     `.camera` instead of the library picker. **Choose** still picks from the library
-  - The simulator has no camera, so only Choose shows there. Take photo needs the phone
+  - **UX pass** — the app now opens on Way Back, laid out as three steps
+    (1 Photo · 2 Place · 3 Mark), with tabs for Way Back / My Walks / About (`ContentView`).
+    An orange "Hold the phone flat" warning shows when the phone is tilted and opens the
+    Level. Green accent and an app icon. Details in four commits, phases 1–4

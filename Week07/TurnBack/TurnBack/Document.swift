@@ -41,21 +41,55 @@ class Document {
     for entry in model.entries {
       if let photoFile = entry.photoFile {
         remove(fileName: photoFile)
+        remove(fileName: "thumb-" + photoFile)
       }
     }
     model.entries = []
     saveModel()
   }
 
-  // Week07: save the photo as a jpg in Documents.
+  // Week07 UX: delete one walk. A plain loop keeps every entry except this
+  // one - Week02 style, no filter.
+  func deleteEntry(entry: DriftEntry) {
+    if let photoFile = entry.photoFile {
+      remove(fileName: photoFile)
+      remove(fileName: "thumb-" + photoFile)
+    }
+    var kept: [DriftEntry] = []
+    for other in model.entries {
+      if other.id != entry.id {
+        kept.append(other)
+      }
+    }
+    model.entries = kept
+    saveModel()
+  }
+
+  // Week07: save the photo as a jpg in Documents, plus a small copy for the
+  // My Walks list ("thumb-" + the same name). The list used to load every
+  // full size photo each time it drew.
+  // The small copy is drawn with UIGraphicsImageRenderer, from Week02's
+  // ascii image page. draw(in:) squeezes the photo into the smaller size.
   func savePhoto(image: UIImage, fileName: String) {
+    writeJPEG(image: image, fileName: fileName)
+
+    let width = 200.0
+    let size = CGSize(width: width, height: width * image.size.height / image.size.width)
+    let renderer = UIGraphicsImageRenderer(size: size)
+    let thumb = renderer.image { context in
+      image.draw(in: CGRect(origin: CGPoint.zero, size: size))
+    }
+    writeJPEG(image: thumb, fileName: "thumb-" + fileName)
+  }
+
+  func writeJPEG(image: UIImage, fileName: String) {
     do {
       let filePath = try documentPath(fileName: fileName)
       let data = image.jpegData(compressionQuality: 0.7)
       try data?.write(to: filePath)
-      print("savePhoto filePath \(filePath)")
+      print("writeJPEG filePath \(filePath)")
     } catch {
-      print("savePhoto error \(error)")
+      print("writeJPEG error \(error)")
     }
   }
 
@@ -71,6 +105,16 @@ class Document {
       print("loadPhoto error \(error)")
       return nil
     }
+  }
+
+  // Week07 UX: the small copy if there is one, else the full photo. Walks
+  // saved before thumbnails were added only have the full one.
+  func loadThumbnail(fileName: String) -> UIImage? {
+    let thumb = loadPhoto(fileName: "thumb-" + fileName)
+    if thumb != nil {
+      return thumb
+    }
+    return loadPhoto(fileName: fileName)
   }
 
   func saveModel() {

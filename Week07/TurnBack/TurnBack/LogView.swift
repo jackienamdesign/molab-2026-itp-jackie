@@ -16,6 +16,12 @@
 //  Week07: walks with a photo show it in place of the emoji. Walks saved
 //  before Week07 have no photo, so they keep their emoji.
 //
+//  Week07 UX pass:
+//  - Tap a walk to open it (WalkDetailView) - the big photo, and delete.
+//  - Under the average, walks with a photo vs without, once there are both.
+//    That's my Week07 question: does lining up with a photo help?
+//  - The list loads the small thumbnail copy, not the full photo.
+//
 
 import SwiftUI
 
@@ -35,12 +41,22 @@ struct LogView: View {
     return Int(total / Double(document.model.entries.count))
   }
 
-  // The saved photo for a walk, or nil if it has none.
-  func photo(entry: DriftEntry) -> UIImage? {
-    if let photoFile = entry.photoFile {
-      return document.loadPhoto(fileName: photoFile)
+  // Week07 UX: the same average, but only for walks with (or without) a
+  // photo. -1 means there are no walks of that kind yet.
+  func averageDrift(withPhoto: Bool) -> Int {
+    var total = 0.0
+    var count = 0
+    for entry in document.model.entries {
+      let hasPhoto = entry.photoFile != nil
+      if hasPhoto == withPhoto {
+        total = total + abs(entry.driftDegrees)
+        count = count + 1
+      }
     }
-    return nil
+    if count == 0 {
+      return -1
+    }
+    return Int(total / Double(count))
   }
 
   var walkCountText: String {
@@ -49,6 +65,14 @@ struct LogView: View {
       return "average drift over 1 walk"
     }
     return "average drift over " + String(count) + " walks"
+  }
+
+  // The small saved photo for a walk, or nil if it has none.
+  func photo(entry: DriftEntry) -> UIImage? {
+    if let photoFile = entry.photoFile {
+      return document.loadThumbnail(fileName: photoFile)
+    }
+    return nil
   }
 
   var body: some View {
@@ -75,43 +99,84 @@ struct LogView: View {
           Text(walkCountText)
             .font(.callout)
             .foregroundStyle(Color.secondary)
+          Text("Lower is better - 0\u{00B0} means the arrow was spot on.")
+            .font(.caption)
+            .foregroundStyle(Color.secondary)
+
+          // Only once there is at least one of each kind to compare.
+          let withPhoto = averageDrift(withPhoto: true)
+          let withoutPhoto = averageDrift(withPhoto: false)
+          if withPhoto >= 0 && withoutPhoto >= 0 {
+            HStack(spacing: 10) {
+              VStack(spacing: 2) {
+                Text(String(withPhoto) + "\u{00B0}")
+                  .font(.title2)
+                  .fontWeight(.bold)
+                Text("with a photo")
+                  .font(.caption)
+                  .foregroundStyle(Color.secondary)
+              }
+              .frame(maxWidth: .infinity, minHeight: 64)
+              .background(
+                RoundedRectangle(cornerRadius: 16)
+                  .foregroundStyle(Color.accentColor.opacity(0.15)))
+
+              VStack(spacing: 2) {
+                Text(String(withoutPhoto) + "\u{00B0}")
+                  .font(.title2)
+                  .fontWeight(.bold)
+                Text("without")
+                  .font(.caption)
+                  .foregroundStyle(Color.secondary)
+              }
+              .frame(maxWidth: .infinity, minHeight: 64)
+              .background(
+                RoundedRectangle(cornerRadius: 16)
+                  .foregroundStyle(Color.gray.opacity(0.1)))
+            }
+            .padding(.horizontal)
+            .padding(.top, 8)
+          }
         }
         .padding(.vertical)
 
         List {
           ForEach(document.model.entries.reversed()) { entry in
-            HStack(spacing: 14) {
-              if let image = photo(entry: entry) {
-                Image(uiImage: image)
-                  .resizable()
-                  .scaledToFill()
-                  .frame(width: 56, height: 56)
-                  .clipShape(RoundedRectangle(cornerRadius: 12))
-              } else {
-                Text(entry.emoji)
-                  .font(.system(size: 34))
-                  .frame(width: 56, height: 56)
-              }
+            // Week07 UX: each row opens its walk. NavigationLink from Week05.
+            NavigationLink(destination: WalkDetailView(entry: entry)) {
+              HStack(spacing: 14) {
+                if let image = photo(entry: entry) {
+                  Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 56, height: 56)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                } else {
+                  Text(entry.emoji)
+                    .font(.system(size: 34))
+                    .frame(width: 56, height: 56)
+                }
 
-              VStack(alignment: .leading, spacing: 2) {
-                Text(entry.name)
-                  .font(.headline)
-                Text(entry.date.formatted(date: .abbreviated, time: .shortened))
-                  .font(.caption)
-                  .foregroundStyle(Color.secondary)
-              }
+                VStack(alignment: .leading, spacing: 2) {
+                  Text(entry.name)
+                    .font(.headline)
+                  Text(entry.date.formatted(date: .abbreviated, time: .shortened))
+                    .font(.caption)
+                    .foregroundStyle(Color.secondary)
+                }
 
-              Spacer()
+                Spacer()
 
-              VStack(alignment: .trailing, spacing: 2) {
-                Text(String(Int(abs(entry.driftDegrees))) + "\u{00B0} off")
-                  .font(.headline)
-                Text(String(Int(entry.minutes.rounded())) + " min")
-                  .font(.caption)
-                  .foregroundStyle(Color.secondary)
+                VStack(alignment: .trailing, spacing: 2) {
+                  Text(String(Int(abs(entry.driftDegrees))) + "\u{00B0} off")
+                    .font(.headline)
+                  Text(String(Int(entry.minutes.rounded())) + " min")
+                    .font(.caption)
+                    .foregroundStyle(Color.secondary)
+                }
               }
+              .padding(.vertical, 6)
             }
-            .padding(.vertical, 6)
           }
         }
         .listStyle(.plain)
