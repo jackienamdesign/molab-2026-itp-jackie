@@ -2,6 +2,14 @@
 
 Class work for MoLab 2026 ITP — Jackie
 
+- Midterm checklist
+  - [ ] weekly description of homework progress/challenges in your wiki page
+  - [x] added jht9629-nyu as collab on your repo
+  - [ ] uploaded at least one photo in MoGallery TestFlight App
+  - [ ] able to build and run example apps own iPhone
+  - [ ] installed Xcode 27
+  - [ ] watched at least one WWDC video
+
 ## Week01
 
 - [MyPlayground.playground](Week01/MyPlayground.playground) — Swift fundamentals
@@ -110,3 +118,26 @@ First real walk on my iPhone: 3° off.
     described in words ("12° to your right")
   - Saving can be tested in the simulator (stop and rerun, and the entries are still
     there). Real drift numbers need the phone
+
+## Week07
+
+Homework: an app that accesses or manipulates photos.
+
+`[screenshots - Way Back with a photo picked, and My Walks with photo rows]`
+
+- [TurnBack](Week07/TurnBack) — Week06's TurnBack plus **a photo of the spot**. In Week06 the
+  weak step was "face the way you marked": by the time I got back I only roughly remembered
+  which way that was. Now I add a photo of the view before pressing Mark, it stays on screen
+  while I walk, and I line up with it before tapping I'm back
+  - `HeadingView` — `PhotosPicker` and `loadImage` from
+    [molab-itp/07-Instafilter](https://github.com/molab-itp/07-Instafilter), without the
+    Core Image filters. The picker shows before marking; the photo shows while walking
+  - `DriftEntry` — **new property** `photoFile: String?`, the name of the jpg. Optional on
+    purpose: my Week06 walks have no photo in their JSON and still load (a plain `String`
+    would make the whole log fail to decode)
+  - `Document` — `savePhoto` / `loadPhoto` write and read a jpg in Documents next to
+    `driftlog.json`, using `documentPath` from `SaveLoadJSON.swift` and the Week02
+    `Data(contentsOf:)` + `UIImage(data:)` pair. Clear all deletes the photo files too
+  - `LogView` — My Walks shows each walk's photo in place of its emoji
+  - `PhotosPicker` can't take a new photo — take it with the Camera app first, then pick it.
+    The simulator has sample photos, so picking and saving can be tested there
