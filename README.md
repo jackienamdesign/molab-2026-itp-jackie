@@ -123,7 +123,7 @@ First real walk on my iPhone: 3° off.
 
 Homework: an app that accesses or manipulates photos.
 
-`[screenshots - Way Back with a photo picked, and My Walks with photo rows]`
+<img src="Week07/wayback-screenshot.png" width="260"> `[My Walks screenshot]`
 
 - [TurnBack](Week07/TurnBack) — Week06's TurnBack plus **a photo of the spot**. In Week06 the
   weak step was "face the way you marked": by the time I got back I only roughly remembered
