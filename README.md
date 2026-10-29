@@ -9,6 +9,7 @@ Class work for MoLab 2026 ITP — Jackie
   - [x] able to build and run example apps own iPhone
   - [ ] installed Xcode 27
   - [ ] watched at least one WWDC video
+  - [x] Upload profile photo to HOS-Lobby app
 
 ## Week01
 
@@ -150,3 +151,31 @@ Homework: an app that accesses or manipulates photos.
     (1 Photo · 2 Place · 3 Mark), with tabs for Way Back / My Walks / About (`ContentView`).
     An orange "Hold the phone flat" warning shows when the phone is tilted and opens the
     Level. Green accent and an app icon. Details in four commits, phases 1–4
+
+## Week08
+
+Homework: a video manipulation app, based on a class resource with my own twist.
+
+`[screenshot from my phone - smiling, and one winking]`
+
+- [EmojiMirror](Week08/EmojiMirror) — **my homework.** The front camera, live, with an emoji
+  stuck on my face that changes with my expression: 🙂 neutral, 😊 smile, 😉 wink, 😌 eyes
+  closed, 😮 mouth open, 😂 smile with mouth open, 😛 tongue out
+  - Based on [molab-itp/07-FaceMeshUI](https://github.com/molab-itp/07-FaceMeshUI), which runs
+    `ARFaceTrackingConfiguration`, draws a cyan wireframe on the face, and reports smile and
+    blink as text. I kept the wireframe and the panel
+  - **My twist:** the sample *tells* you what your face is doing; mine *shows* it on the
+    video. An emoji on a flat square (`SCNPlane`) is added as a child of the face node, so it
+    moves and turns with my head without any maths of my own
+  - `EmojiMask.swift` — **new.** `pickEmoji` reads five blend shapes (the sample's smile and
+    blink, plus `jawOpen` and `tongueOut`) and picks an emoji with a plain if-chain, first
+    match wins. `emojiImage` draws an emoji into a see-through picture with
+    `UIGraphicsImageRenderer` + `NSAttributedString.draw(at:)`, the same as my Week02 ascii
+    image page
+  - `FaceViewAR` — the sample's, plus the emoji square. The picture is only swapped when the
+    emoji changes, not 60 times a second
+  - `FaceTracker` — the sample's, plus `jawOpen`, `tongueOut` and `emoji`
+  - `ContentView` — a row of all seven emoji with the current one lit up (like the selected
+    effect in [08-CameraRecorder](https://github.com/molab-itp/08-CameraRecorder)), how to
+    make it, and the sample's status text
+  - **Device required:** an iPhone with Face ID. The simulator says face tracking isn't supported
