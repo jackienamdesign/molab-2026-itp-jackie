@@ -156,7 +156,9 @@ Homework: an app that accesses or manipulates photos.
 
 Homework: a video manipulation app, based on a class resource with my own twist.
 
-`[screenshot from my phone - smiling, and one winking]`
+<img src="Week08/emojimirror-screenshot.png" width="260">
+
+First run on my iPhone: winking left.
 
 - [EmojiMirror](Week08/EmojiMirror) — **my homework.** The front camera, live, with an emoji
   stuck on my face that changes with my expression: 🙂 neutral, 😊 smile, 😉 wink, 😌 eyes
