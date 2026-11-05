@@ -181,3 +181,19 @@ First run on my iPhone: winking left.
     effect in [08-CameraRecorder](https://github.com/molab-itp/08-CameraRecorder)), how to
     make it, and the sample's status text
   - **Device required:** an iPhone with Face ID. The simulator says face tracking isn't supported
+
+## Week09
+
+Homework: a first draft of my final project proposal, and MoLobby with my own multi-user twist.
+
+- [SpotLobby](Week09/SpotLobby) — a live headcount of the ITP floor, based on MoLobby from
+  [98-MoGallery-Private](https://github.com/molab-itp/98-MoGallery-Private). Every change to the
+  sample is marked `Week09:`
+  - `Zones.swift` — **new.** The four areas of the floor as parallel arrays, and `rankZones`, an
+    if-chain where the first match wins, like `pickEmoji` in Week08
+  - `MatchView` — **new.** Four quick questions match you to an area with a free seat
+  - `FloorView` — **new.** How many people are in each area right now, with I'm here and I left
+  - `LobbyModel`, `UserModel` — the sample's, plus `zone`, `zoneDate` and `saveZone`. The sample's
+    snapshot listener sends the live counts to every phone
+  - **Needs** `GoogleService-Info.plist` from 98-MoGallery-Private, which isn't in this repo
+- [wiki-draft.md](Week09/wiki-draft.md) — draft of my wiki page, including the proposal
