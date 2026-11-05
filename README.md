@@ -186,6 +186,8 @@ First run on my iPhone: winking left.
 
 Homework: a first draft of my final project proposal, and MoLobby with my own multi-user twist.
 
+<img src="Week09/spotlobby-match-screenshot.png" width="260"> <img src="Week09/spotlobby-floor-screenshot.png" width="260">
+
 - [SpotLobby](Week09/SpotLobby) — a live headcount of the ITP floor, based on MoLobby from
   [98-MoGallery-Private](https://github.com/molab-itp/98-MoGallery-Private). Every change to the
   sample is marked `Week09:`

@@ -2,7 +2,9 @@
 
 **Homework:** [Week09/SpotLobby](https://github.com/jackienamdesign/molab-2026-itp-jackie/tree/main/Week09/SpotLobby)
 
-`[screenshot: Match and Floor tabs]`
+<img src="https://raw.githubusercontent.com/jackienamdesign/molab-2026-itp-jackie/main/Week09/spotlobby-match-screenshot.png" width="260"> <img src="https://raw.githubusercontent.com/jackienamdesign/molab-2026-itp-jackie/main/Week09/spotlobby-floor-screenshot.png" width="260">
+
+In the simulator: Match with nothing checked sends me to the ER, and Floor counts my check in at the Shop.
 
 ## Part 1: final project proposal, first draft
 
